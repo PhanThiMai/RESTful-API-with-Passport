@@ -3,14 +3,31 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-require('./passport');
+const mongoose = require('mongoose');
 
+const passport = require('./passport');
+require("dotenv").config();
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const auth = require('./routes/auth');
 
 var app = express();
+//console.log(typeof usersRouter)
+
+//connect to database 
+
+const connStr = `mongodb+srv://${process.env.DB_USER}:${
+  process.env.DB_PASS
+  }@${process.env.DB_URL}/${process.env.DB_NAME}`;
+
+
+mongoose.connect(connStr, err => {
+  if (err) fail(err);
+  else console.log("Connected database!");
+
+});
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
