@@ -39,9 +39,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/auth', auth);
-app.use('/user', passport.authenticate('jwt', { session: false }), usersRouter);
+app.use('/ ', passport.authenticate('jwt', { session: false }), indexRouter);
+app.use('/user', passport.authenticate('jwt', { session: false }), auth);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
