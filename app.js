@@ -5,6 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require('mongoose');
 require("dotenv").config();
+const passport = require('passport');
+require('./passport');
 
 
 var indexRouter = require('./routes/index');
@@ -38,7 +40,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
 
 
 

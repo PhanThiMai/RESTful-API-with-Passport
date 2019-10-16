@@ -2,6 +2,8 @@
 var express = require('express');
 var router = express.Router();
 const users = require('../models/user.model')
+const jwt = require('jsonwebtoken');
+const passport = require('passport');
 
 var crypto = require("crypto");
 
@@ -77,11 +79,53 @@ router.post('/register', (req, res, next) => {
         err: err
       })
     })
+});
 
 
+router.post('/login', function (req, res, next) {
+
+  passport.authenticate('local', { session: false }, (err, user, info) => {
+
+    if (err || !user) {
+      return res.status(400).json({
+        message: info ? info.message : 'Login failed',
+        user: user
+      });
+    }
+
+    req.login(user, { session: false }, (err) => {
+      if (err) {
+        res.send(err);
+      }
+
+      const token = jwt.sign(user, 'WebNC');
+
+      return res.json({ user, token });
+    });
+  })
+    (req, res);
 
 });
 
+
+router.get('/me', function (req, res, next) {
+
+  passport.authenticate('jwt', { session: false }, (err, user, info) => {
+
+    if (err || !user) {
+      return res.status(400).json({
+        message: info ? info.message : 'Must be logined to access to /me',
+        user: user
+      });
+    }
+    return res.json({
+      userInfor: user
+    }
+    )
+
+  })
+    (req, res);
+});
 
 
 module.exports = router;
